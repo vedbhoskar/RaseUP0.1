@@ -1,15 +1,19 @@
 # RaseUP
 
-RaseUP is a parent-approved learning dashboard and interactive learner player. The first journey, **The Brave Mic**, turns the opening feelings-and-reasons curriculum into a complete story, speaking, and reflection loop.
+## How to run locally
 
-## Local development
+Requires Node.js 22.13 or newer and npm.
 
 ```bash
+git clone https://github.com/vedbhoskar/RaseUP0.1.git
+cd RaseUP0.1
 npm install
 npm run dev
 ```
 
 Open `http://localhost:3000`. Review and approve the journey in Parent view, switch to Learner, complete the activity, and return to Parent view to see the saved evidence and scores.
+
+RaseUP is a parent-approved learning dashboard and interactive learner player. The first journey, **The Brave Mic**, turns the opening feelings-and-reasons curriculum into a complete story, speaking, and reflection loop.
 
 ## Product structure
 
