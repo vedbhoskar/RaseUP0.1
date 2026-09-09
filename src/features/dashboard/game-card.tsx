@@ -15,8 +15,9 @@ export function GameCard({ game, status }: { game: GameDefinition; status: keyof
   function openGame() { startGame(game.id); router.push(`/games/${game.slug}`); }
 
   return <article className={`student-game-card ${game.id === 'nova-why-quest' ? 'why-quest-card' : ''}`}>
-    <div className="game-card-art" aria-hidden="true"><span className="nova-orb"><i /><i /><i /></span><strong>?</strong></div>
+    <div className="game-card-art" aria-hidden="true"><span className="nova-orb"><i /><i /><i /></span><strong>{game.curriculumCode}</strong></div>
     <div className="student-game-copy">
+      <p className="game-topic-code">Topic {game.curriculumCode}</p>
       <div className="game-meta"><span><Clock3 /> {game.estimatedMinutes} min</span><span><MessageCircle /> {game.id === 'nova-why-quest' ? 'Reasons · Reflect · Talk' : 'Feel · Build · Talk'}</span></div>
       <h3>{game.title}</h3><p>{game.summary}</p>
       <div className="game-module-row" aria-label="Mission modules"><span><CheckCircle2 /> Let’s Think</span><span>Let’s Speak</span><span>Let’s Talk</span></div>

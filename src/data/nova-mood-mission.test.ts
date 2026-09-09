@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { MISSION_STAGES, THINK_SITUATIONS } from './nova-mood-mission';
+import { MISSION_STAGES, NOVA_MOOD_MISSION, THINK_SITUATIONS } from './nova-mood-mission';
+import { NOVA_WHY_QUEST } from './nova-why-quest';
 
 describe('Nova Mood Mission curriculum registry', () => {
   it('has eleven unique visible stops in dependency order', () => {
@@ -11,5 +12,10 @@ describe('Nova Mood Mission curriculum registry', () => {
 
   it('covers positive, difficult, and mixed situation rounds', () => {
     expect(THINK_SITUATIONS.map((situation) => situation.category)).toEqual(['positive', 'difficult', 'mixed']);
+  });
+
+  it('exposes the workbook numbering for each dashboard game', () => {
+    expect(NOVA_MOOD_MISSION.curriculumCode).toBe('1.1');
+    expect(NOVA_WHY_QUEST.curriculumCode).toBe('1.2');
   });
 });

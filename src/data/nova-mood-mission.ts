@@ -38,6 +38,7 @@ export const MISSION_STAGES: readonly StageDefinition[] = [
 export const NOVA_MOOD_MISSION: GameDefinition = {
   id: 'nova-mood-mission',
   slug: 'nova-mood-mission',
+  curriculumCode: '1.1',
   topicId: 'self-awareness',
   title: "Nova's Mood Mission",
   summary: 'Explore everyday moments, build a complete feeling sentence, and talk it through with Nova.',

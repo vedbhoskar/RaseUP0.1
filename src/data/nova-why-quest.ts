@@ -45,6 +45,7 @@ export const WHY_QUEST_STAGES: readonly StageDefinition[] = [
 export const NOVA_WHY_QUEST: GameDefinition = {
   id: 'nova-why-quest',
   slug: 'nova-why-quest',
+  curriculumCode: '1.2',
   topicId: 'self-awareness',
   title: "Nova's Why Quest",
   summary: 'Connect feelings to reasons, explore mixed emotions, and explain your thinking with Nova.',
@@ -52,4 +53,3 @@ export const NOVA_WHY_QUEST: GameDefinition = {
   skills: ['feelingRecognition', 'situationConnection', 'reasonBuilding', 'speakingPractice'],
   stages: [...WHY_QUEST_STAGES],
 };
-

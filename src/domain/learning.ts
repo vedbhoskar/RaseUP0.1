@@ -35,6 +35,7 @@ export type StageDefinition = { id: StageId; module: ModuleKind; label: string; 
 export type GameDefinition = {
   id: GameId;
   slug: string;
+  curriculumCode: string;
   topicId: TopicId;
   title: string;
   summary: string;
