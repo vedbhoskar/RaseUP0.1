@@ -27,4 +27,18 @@ describe('Mood Mission stage engine', () => {
     expect(previous.currentStageId).toBe('speak-p1');
     expect(previous.response).toEqual(attempt.response);
   });
+
+  it('accepts a microphone-free answer in every Talk stage', () => {
+    for (const stage of ['talk-feeling', 'talk-reason', 'talk-life'] as const) {
+      const attempt = {
+        ...createAttempt(`attempt-${stage}`, new Date()),
+        currentStageId: stage,
+        response: {
+          thinkResponses: [],
+          talkAnswers: [{ turnId: stage, mode: 'spoken-confirmation' as const, attempted: true, retryCount: 0 }],
+        },
+      };
+      expect(canAdvance(attempt)).toBe(true);
+    }
+  });
 });
