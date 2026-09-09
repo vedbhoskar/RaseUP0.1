@@ -30,6 +30,7 @@ export function canAdvance(attempt: GameAttempt) {
     case 'talk-reason':
     case 'talk-life': return response.talkAnswers.some((answer) => answer.turnId === attempt.currentStageId && answer.attempted);
     case 'results': return false;
+    default: return false;
   }
 }
 

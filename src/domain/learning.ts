@@ -1,5 +1,5 @@
 export type TopicId = string;
-export type GameId = 'nova-mood-mission';
+export type GameId = 'nova-mood-mission' | 'nova-why-quest';
 export type ModuleKind = 'welcome' | 'think' | 'speak' | 'talk' | 'results';
 export type StageId =
   | 'welcome'
@@ -12,9 +12,22 @@ export type StageId =
   | 'talk-feeling'
   | 'talk-reason'
   | 'talk-life'
-  | 'results';
+  | 'results'
+  | 'why-welcome'
+  | 'why-think'
+  | 'why-speak-p1'
+  | 'why-speak-p2'
+  | 'why-speak-p3'
+  | 'why-speak-p4'
+  | 'why-speak-p5'
+  | 'why-speak-p6'
+  | 'why-speak-p7'
+  | 'why-talk-direct'
+  | 'why-talk-reflect'
+  | 'why-talk-advanced'
+  | 'why-results';
 
-export type MoodId = 'happy' | 'sad' | 'excited' | 'nervous' | 'proud' | 'scared' | 'unsure';
+export type MoodId = 'happy' | 'sad' | 'excited' | 'nervous' | 'proud' | 'scared' | 'unsure' | 'disappointed' | 'confused' | 'frustrated' | 'comfortable';
 export type SkillId = 'feelingRecognition' | 'situationConnection' | 'reasonBuilding' | 'speakingPractice';
 
 export type TopicDefinition = { id: TopicId; title: string; description: string; order: number };
@@ -32,7 +45,7 @@ export type GameDefinition = {
 export type SituationDefinition = { id: string; category: 'positive' | 'difficult' | 'mixed'; text: string; prompt: string };
 export type ThinkResponse = { situationId: string; moods: MoodId[]; reason?: string };
 export type TalkAnswer = {
-  turnId: Extract<StageId, `talk-${string}`>;
+  turnId: Extract<StageId, `${string}talk-${string}`>;
   mode: 'voice' | 'text' | 'suggestion' | 'spoken-confirmation';
   text?: string;
   attempted: boolean;
@@ -41,8 +54,14 @@ export type TalkAnswer = {
 export type MissionResponse = {
   thinkResponses: ThinkResponse[];
   feeling?: MoodId;
+  secondFeeling?: MoodId;
+  laterFeeling?: MoodId;
   situationText?: string;
   reasonText?: string;
+  secondReasonText?: string;
+  changeReasonText?: string;
+  mainReasonText?: string;
+  reflectionReasonText?: string;
   intensity?: string;
   personalExample?: string;
   talkAnswers: TalkAnswer[];
