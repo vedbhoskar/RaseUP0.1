@@ -15,6 +15,10 @@ Open `http://localhost:3000`. Review and approve the journey in Parent view, swi
 
 RaseUP is a parent-approved learning dashboard and interactive learner player. The first journey, **The Brave Mic**, turns the opening feelings-and-reasons curriculum into a complete story, speaking, and reflection loop.
 
+## Next product design
+
+The product specification for the direct student dashboard and **Nova's Mood Mission** is in [`docs/STUDENT-DASHBOARD-AND-MOOD-MISSION-TECHNICAL-DESIGN.md`](docs/STUDENT-DASHBOARD-AND-MOOD-MISSION-TECHNICAL-DESIGN.md). The reviewed dependency architecture and sequential TDD plan are in [`docs/MOOD-MISSION-TDD-BUILD-PLAN.md`](docs/MOOD-MISSION-TDD-BUILD-PLAN.md).
+
 ## Product structure
 
 - `app/` - routes, page metadata, providers, and shared visual theme
