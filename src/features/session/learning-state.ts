@@ -1,11 +1,13 @@
 import { createAttempt } from '@/src/domain/mission-engine';
 import { scoreMission } from '@/src/domain/scoring';
-import type { GameAttempt, StudentState } from '@/src/domain/learning';
+import { createWhyAttempt } from '@/src/domain/why-quest-engine';
+import { scoreWhyQuest } from '@/src/domain/why-quest-scoring';
+import type { GameAttempt, GameId, StudentState } from '@/src/domain/learning';
 
-export function startOrResumeGame(state: StudentState, createId: () => string, now: Date) {
-  const active = state.attempts.find((attempt) => attempt.gameId === 'nova-mood-mission' && attempt.status === 'in-progress');
+export function startOrResumeGame(state: StudentState, gameId: GameId, createId: () => string, now: Date) {
+  const active = state.attempts.find((attempt) => attempt.gameId === gameId && attempt.status === 'in-progress');
   if (active) return { state, attemptId: active.id, action: 'resumed' as const };
-  const attempt = createAttempt(createId(), now);
+  const attempt = gameId === 'nova-why-quest' ? createWhyAttempt(createId(), now) : createAttempt(createId(), now);
   return { state: { ...state, attempts: [attempt, ...state.attempts] }, attemptId: attempt.id, action: 'started' as const };
 }
 
@@ -20,9 +22,9 @@ export function completeGame(state: StudentState, attemptId: string, now: Date) 
   const completed: GameAttempt = {
     ...current,
     status: 'completed',
-    currentStageId: 'results',
+    currentStageId: current.gameId === 'nova-why-quest' ? 'why-results' : 'results',
     completedAt: now.toISOString(),
-    score: scoreMission(current),
+    score: current.gameId === 'nova-why-quest' ? scoreWhyQuest(current) : scoreMission(current),
   };
   const playedOn = now.toISOString().slice(0, 10);
   return {

@@ -1,4 +1,4 @@
-import type { GameAttempt, SkillId } from './learning';
+import type { GameAttempt, GameId, SkillId } from './learning';
 
 export function getDashboardStats(attempts: GameAttempt[]) {
   const completed = attempts.filter((attempt) => attempt.status === 'completed' && attempt.score);
@@ -13,8 +13,8 @@ export function getDashboardStats(attempts: GameAttempt[]) {
   return { completedGames: completed.length, averageScore, strongestSkill };
 }
 
-export function getGameCardStatus(attempts: GameAttempt[]): 'start' | 'continue' | 'replay' {
-  if (attempts.some((attempt) => attempt.gameId === 'nova-mood-mission' && attempt.status === 'in-progress')) return 'continue';
-  if (attempts.some((attempt) => attempt.gameId === 'nova-mood-mission' && attempt.status === 'completed')) return 'replay';
+export function getGameCardStatus(attempts: GameAttempt[], gameId: GameId): 'start' | 'continue' | 'replay' {
+  if (attempts.some((attempt) => attempt.gameId === gameId && attempt.status === 'in-progress')) return 'continue';
+  if (attempts.some((attempt) => attempt.gameId === gameId && attempt.status === 'completed')) return 'replay';
   return 'start';
 }

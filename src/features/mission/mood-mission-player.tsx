@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Brain, MessageCircle, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NOVA_MOOD_MISSION } from '@/src/data/nova-mood-mission';
-import { advanceAttempt, goBack } from '@/src/domain/mission-engine';
+import { advanceAttempt, canAdvance, goBack } from '@/src/domain/mission-engine';
 import { useLearningStore } from '@/src/features/session/learning-store';
 import { MascotConversation } from './mascot-conversation';
 import { MissionResults } from './mission-results';
@@ -15,8 +15,9 @@ import { ThinkStage } from './think-stage';
 
 export function MoodMissionPlayer() {
   const { state, startGame, updateAttempt, completeGame } = useLearningStore();
-  const attempt = state.attempts.find((candidate) => candidate.status === 'in-progress') ?? state.attempts.find((candidate) => candidate.currentStageId === 'results');
-  if (!attempt) return <main className="mission-preview-page"><section className="mission-preview-card"><NovaMark /><p className="eyebrow">Self Awareness & Identity</p><h1>{NOVA_MOOD_MISSION.title}</h1><p>{NOVA_MOOD_MISSION.summary}</p><Button className="student-game-action" onClick={startGame}>Start mission <ArrowRight /></Button><Link href="/" className="mission-back"><ArrowLeft /> Back to dashboard</Link></section></main>;
+  const attempt = state.attempts.find((candidate) => candidate.gameId === NOVA_MOOD_MISSION.id && candidate.status === 'in-progress') ?? state.attempts.find((candidate) => candidate.gameId === NOVA_MOOD_MISSION.id && candidate.currentStageId === 'results');
+  const startMission = () => startGame(NOVA_MOOD_MISSION.id);
+  if (!attempt) return <main className="mission-preview-page"><section className="mission-preview-card"><NovaMark /><p className="eyebrow">Self Awareness & Identity</p><h1>{NOVA_MOOD_MISSION.title}</h1><p>{NOVA_MOOD_MISSION.summary}</p><Button className="student-game-action" onClick={startMission}>Start mission <ArrowRight /></Button><Link href="/" className="mission-back"><ArrowLeft /> Back to dashboard</Link></section></main>;
 
   const currentAttempt = attempt;
   const stage = NOVA_MOOD_MISSION.stages.find((candidate) => candidate.id === currentAttempt.currentStageId) ?? NOVA_MOOD_MISSION.stages[0];
@@ -26,12 +27,12 @@ export function MoodMissionPlayer() {
   }
   function back() { updateAttempt(goBack(currentAttempt)); }
 
-  return <MissionShell stage={stage}>
+  return <MissionShell game={NOVA_MOOD_MISSION} stage={stage}>
     {stage.id === 'welcome' && <WelcomeStage onNext={next} />}
     {stage.id === 'think' && <ThinkStage attempt={currentAttempt} onChange={updateAttempt} onNext={next} onBack={back} />}
     {stage.module === 'speak' && <SpeakStage attempt={currentAttempt} onChange={updateAttempt} onNext={next} onBack={back} />}
-    {stage.module === 'talk' && <MascotConversation attempt={currentAttempt} onChange={updateAttempt} onNext={next} onBack={back} />}
-    {stage.id === 'results' && <MissionResults attempt={currentAttempt} onPlayAgain={startGame} />}
+    {stage.module === 'talk' && <MascotConversation attempt={currentAttempt} onChange={updateAttempt} onNext={next} onBack={back} canContinue={canAdvance} finalStageId="talk-life" />}
+    {stage.id === 'results' && <MissionResults attempt={currentAttempt} onPlayAgain={startMission} />}
   </MissionShell>;
 }
 

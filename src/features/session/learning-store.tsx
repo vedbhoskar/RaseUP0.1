@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { INITIAL_STUDENT_STATE, type GameAttempt, type StudentState } from '@/src/domain/learning';
+import { INITIAL_STUDENT_STATE, type GameAttempt, type GameId, type StudentState } from '@/src/domain/learning';
 import { completeGame, replaceAttempt, startOrResumeGame } from './learning-state';
 import { LocalStorageLearningRepository } from './local-storage-repository';
 
@@ -9,7 +9,7 @@ type LearningStore = {
   state: StudentState;
   ready: boolean;
   persistent: boolean;
-  startGame: () => string;
+  startGame: (gameId: GameId) => string;
   updateAttempt: (attempt: GameAttempt) => void;
   completeGame: (attemptId: string) => void;
   resetProgress: () => void;
@@ -41,8 +41,8 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
     }
   }, [ready, state]);
 
-  const startGame = useCallback(() => {
-    const result = startOrResumeGame(state, () => crypto.randomUUID(), new Date());
+  const startGame = useCallback((gameId: GameId) => {
+    const result = startOrResumeGame(state, gameId, () => crypto.randomUUID(), new Date());
     setState(result.state);
     return result.attemptId;
   }, [state]);

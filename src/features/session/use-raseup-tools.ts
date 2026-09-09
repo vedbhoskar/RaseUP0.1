@@ -45,7 +45,15 @@ export function useRaseUpTools() {
         description: "Start Nova's Mood Mission, or resume the student's existing in-progress attempt.",
         inputSchema: { type: 'object', properties: {}, additionalProperties: false },
         annotations: { readOnlyHint: false, untrustedContentHint: false },
-        execute: (input) => { assertEmptyInput(input); return { gameId: 'nova-mood-mission', attemptId: startGame(), path: '/games/nova-mood-mission' }; },
+        execute: (input) => { assertEmptyInput(input); return { gameId: 'nova-mood-mission', attemptId: startGame('nova-mood-mission'), path: '/games/nova-mood-mission' }; },
+      },
+      {
+        name: 'start_or_resume_why_quest',
+        title: "Start or resume Nova's Why Quest",
+        description: "Start Topic 1.2, Nova's Why Quest, or resume the student's in-progress attempt.",
+        inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+        annotations: { readOnlyHint: false, untrustedContentHint: false },
+        execute: (input) => { assertEmptyInput(input); return { gameId: 'nova-why-quest', attemptId: startGame('nova-why-quest'), path: '/games/nova-why-quest' }; },
       },
     ];
 

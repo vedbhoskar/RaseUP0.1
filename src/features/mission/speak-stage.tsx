@@ -1,10 +1,12 @@
 'use client';
 
-import { Check, PencilLine } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { INTENSITY_OPTIONS, PERSONAL_OPTIONS, REASON_OPTIONS, SITUATION_OPTIONS } from '@/src/data/nova-mood-mission';
 import type { GameAttempt, MissionResponse } from '@/src/domain/learning';
 import { canAdvance } from '@/src/domain/mission-engine';
+import { buildP1, buildP2, buildP3, buildP4, buildP5 } from '@/src/domain/sentence-builder';
 import { MoodPicker } from './mood-picker';
+import { OptionBuilder } from './option-builder';
 import { SentenceLadder } from './sentence-ladder';
 import { StageActions } from './stage-actions';
 import { VoicePractice } from './voice-practice';
@@ -13,8 +15,15 @@ export function SpeakStage({ attempt, onChange, onNext, onBack }: { attempt: Gam
   const stage = attempt.currentStageId;
   function update(patch: Partial<MissionResponse>) { onChange({ ...attempt, response: { ...attempt.response, ...patch } }); }
   function choose(field: 'situationText' | 'reasonText' | 'intensity' | 'personalExample', value: string) { update({ [field]: value }); }
+  const response = attempt.response;
+  const lines = [];
+  if (response.feeling) lines.push({ id: 'speak-p1' as const, label: 'P1', text: buildP1(response.feeling) });
+  if (response.feeling && response.situationText) lines.push({ id: 'speak-p2' as const, label: 'P2', text: buildP2(response.feeling, response.situationText) });
+  if (response.feeling && response.situationText && response.reasonText) lines.push({ id: 'speak-p3' as const, label: 'P3', text: buildP3(response.feeling, response.situationText, response.reasonText) });
+  if (response.feeling && response.situationText && response.reasonText && response.intensity) lines.push({ id: 'speak-p4' as const, label: 'P4', text: buildP4({ feeling: response.feeling, situation: response.situationText, reason: response.reasonText, intensity: response.intensity }) });
+  if (response.feeling && response.personalExample) lines.push({ id: 'speak-p5' as const, label: 'P5', text: buildP5(response.feeling, response.personalExample) });
 
-  return <div className="speak-stage"><SentenceLadder response={attempt.response} currentStage={stage} />
+  return <div className="speak-stage"><SentenceLadder lines={lines} currentStage={stage} label="Your growing sentence" />
     {stage === 'speak-p1' && <><p className="stage-question">Which feeling do you want to express?</p><MoodPicker value={attempt.response.feeling ? [attempt.response.feeling] : []} onChange={(moods) => update({ feeling: moods[0] })} /></>}
     {stage === 'speak-p2' && <OptionBuilder label="When does it happen?" options={SITUATION_OPTIONS} value={attempt.response.situationText ?? ''} onChange={(value) => choose('situationText', value)} placeholder="Or write your own situation" />}
     {stage === 'speak-p3' && <OptionBuilder label="Why do you feel that way?" options={REASON_OPTIONS} value={attempt.response.reasonText ?? ''} onChange={(value) => choose('reasonText', value)} placeholder="Or write your own reason" />}
@@ -22,8 +31,4 @@ export function SpeakStage({ attempt, onChange, onNext, onBack }: { attempt: Gam
     {stage === 'speak-p5' && <OptionBuilder label="One thing that makes you feel this way is…" options={PERSONAL_OPTIONS} value={attempt.response.personalExample ?? ''} onChange={(value) => choose('personalExample', value)} placeholder="Or write your own safe example" />}
     <StageActions onBack={onBack} onNext={onNext} disabled={!canAdvance(attempt)} nextLabel={stage === 'speak-p5' ? 'Talk with Nova' : 'Grow my sentence'} />
   </div>;
-}
-
-function OptionBuilder({ label, options, value, onChange, placeholder }: { label: string; options: readonly string[]; value: string; onChange: (value: string) => void; placeholder: string }) {
-  return <div className="option-builder"><p className="stage-question">{label}</p><div className="choice-chip-grid">{options.map((option) => <button key={option} className={value === option ? 'selected' : ''} onClick={() => onChange(option)}>{value === option && <Check />}{option}</button>)}</div><label className="custom-answer"><PencilLine /><span className="sr-only">{placeholder}</span><input value={options.includes(value) ? '' : value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} /></label></div>;
 }
