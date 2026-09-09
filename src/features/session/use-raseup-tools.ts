@@ -19,7 +19,7 @@ declare global {
 }
 
 export function useRaseUpTools() {
-  const { state, approveJourney } = useLearningStore();
+  const { state, startGame } = useLearningStore();
 
   useEffect(() => {
     const context = document.modelContext;
@@ -30,18 +30,22 @@ export function useRaseUpTools() {
       {
         name: 'read_learning_summary',
         title: 'Read learning summary',
-        description: 'Read the learner name, journey approval state, attempt count, and latest score shown in RaseUP.',
+        description: 'Read the student name, completed game count, current streak, and latest score shown in RaseUP.',
         inputSchema: { type: 'object', properties: {}, additionalProperties: false },
         annotations: { readOnlyHint: true, untrustedContentHint: false },
-        execute: (input) => { assertEmptyInput(input); return { learner: state.learnerName, approvalStatus: state.approvalStatus, attempts: state.attempts.length, latestScore: state.attempts[0]?.score ?? null }; },
+        execute: (input) => {
+          assertEmptyInput(input);
+          const completed = state.attempts.filter((attempt) => attempt.status === 'completed');
+          return { student: state.student.displayName, completedGames: completed.length, currentStreak: state.streak.current, latestScore: completed[0]?.score?.overall ?? null };
+        },
       },
       {
-        name: 'approve_brave_mic',
-        title: 'Approve The Brave Mic',
-        description: 'Approve The Brave Mic journey and unlock it on the learner dashboard.',
+        name: 'start_or_resume_mood_mission',
+        title: "Start or resume Nova's Mood Mission",
+        description: "Start Nova's Mood Mission, or resume the student's existing in-progress attempt.",
         inputSchema: { type: 'object', properties: {}, additionalProperties: false },
         annotations: { readOnlyHint: false, untrustedContentHint: false },
-        execute: (input) => { assertEmptyInput(input); approveJourney(); return { journeyId: 'brave-mic', status: 'approved' }; },
+        execute: (input) => { assertEmptyInput(input); return { gameId: 'nova-mood-mission', attemptId: startGame(), path: '/games/nova-mood-mission' }; },
       },
     ];
 
@@ -49,7 +53,7 @@ export function useRaseUpTools() {
       try { void Promise.resolve(context.registerTool(tool, { signal: lifecycle.signal })); } catch { /* Unsupported preview host. */ }
     }
     return () => lifecycle.abort();
-  }, [approveJourney, state]);
+  }, [startGame, state]);
 }
 
 function assertEmptyInput(input: unknown) {

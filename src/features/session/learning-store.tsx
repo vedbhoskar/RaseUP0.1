@@ -1,47 +1,60 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { INITIAL_LEARNING_STATE, type LearningAttempt, type LearningState } from '@/src/domain/learning';
-
-const STORAGE_KEY = 'raseup-learning-state-v1';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { INITIAL_STUDENT_STATE, type GameAttempt, type StudentState } from '@/src/domain/learning';
+import { completeGame, replaceAttempt, startOrResumeGame } from './learning-state';
+import { LocalStorageLearningRepository } from './local-storage-repository';
 
 type LearningStore = {
-  state: LearningState;
+  state: StudentState;
   ready: boolean;
-  approveJourney: () => void;
-  saveAttempt: (attempt: LearningAttempt) => void;
-  resetDemo: () => void;
+  persistent: boolean;
+  startGame: () => string;
+  updateAttempt: (attempt: GameAttempt) => void;
+  completeGame: (attemptId: string) => void;
+  resetProgress: () => void;
 };
 
 const LearningContext = createContext<LearningStore | null>(null);
 
 export function LearningProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<LearningState>(INITIAL_LEARNING_STATE);
+  const [state, setState] = useState<StudentState>(INITIAL_STUDENT_STATE);
   const [ready, setReady] = useState(false);
+  const [persistent, setPersistent] = useState(true);
+  const repository = useRef<LocalStorageLearningRepository | null>(null);
 
   useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored) setState(JSON.parse(stored) as LearningState);
-    } catch {
-      window.localStorage.removeItem(STORAGE_KEY);
-    } finally {
+    repository.current = new LocalStorageLearningRepository(window.localStorage);
+    const timer = window.setTimeout(() => {
+      setState(repository.current?.load() ?? INITIAL_STUDENT_STATE);
       setReady(true);
-    }
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    if (ready) window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    if (!ready) return;
+    const saved = repository.current?.save(state) ?? false;
+    if (!saved) {
+      const timer = window.setTimeout(() => setPersistent(false), 0);
+      return () => window.clearTimeout(timer);
+    }
   }, [ready, state]);
 
-  const approveJourney = useCallback(() => setState((current) => ({ ...current, approvalStatus: 'approved' })), []);
-  const saveAttempt = useCallback((attempt: LearningAttempt) => setState((current) => {
-    if (current.attempts.some((item) => item.id === attempt.id)) return current;
-    return { ...current, streak: current.streak + 1, attempts: [attempt, ...current.attempts] };
-  }), []);
-  const resetDemo = useCallback(() => setState(INITIAL_LEARNING_STATE), []);
+  const startGame = useCallback(() => {
+    const result = startOrResumeGame(state, () => crypto.randomUUID(), new Date());
+    setState(result.state);
+    return result.attemptId;
+  }, [state]);
+  const updateAttempt = useCallback((attempt: GameAttempt) => setState((current) => replaceAttempt(current, attempt)), []);
+  const finishGame = useCallback((attemptId: string) => setState((current) => completeGame(current, attemptId, new Date())), []);
+  const resetProgress = useCallback(() => {
+    repository.current?.clear();
+    setState(structuredClone(INITIAL_STUDENT_STATE));
+    setPersistent(true);
+  }, []);
 
-  const value = useMemo(() => ({ state, ready, approveJourney, saveAttempt, resetDemo }), [state, ready, approveJourney, saveAttempt, resetDemo]);
+  const value = useMemo(() => ({ state, ready, persistent, startGame, updateAttempt, completeGame: finishGame, resetProgress }), [state, ready, persistent, startGame, updateAttempt, finishGame, resetProgress]);
   return <LearningContext.Provider value={value}>{children}</LearningContext.Provider>;
 }
 

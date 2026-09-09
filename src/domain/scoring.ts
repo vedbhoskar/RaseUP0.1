@@ -24,14 +24,3 @@ export function scoreMission(attempt: GameAttempt): MissionScore {
   const overall = Math.round(Object.values(skills).reduce((sum, value) => sum + value, 0) / Object.values(skills).length);
   return { overall, ...skills };
 }
-
-// Temporary v1 helpers. Deleted with the Brave Mic UI.
-export function buildFeelingChangeSentence(beforeFeeling: string, afterFeeling: string, reason: string) {
-  if (!beforeFeeling || !afterFeeling || !reason) return '';
-  return `At first I felt ${beforeFeeling}, but later I felt ${afterFeeling} because ${reason.replace(/\.$/, '')}.`;
-}
-export function scoreAttempt(speakingMode: 'recorded' | 'practised' | 'supported') {
-  const skills = { feeling: 100, reason: 90, speaking: speakingMode === 'recorded' ? 100 : speakingMode === 'practised' ? 78 : 60, reflection: 92 };
-  const score = Math.round(Object.values(skills).reduce((sum, value) => sum + value, 0) / Object.values(skills).length);
-  return { skills, score };
-}

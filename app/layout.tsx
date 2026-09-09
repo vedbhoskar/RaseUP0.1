@@ -3,8 +3,8 @@ import './globals.css';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: 'RaseUP | Learning journeys that grow with you',
-  description: 'A learner and parent home for guided speaking practice, progress, and reflection.',
+  title: 'RaseUP | Games for clear, confident expression',
+  description: 'A student learning dashboard for practising feelings, reasons, and confident speaking through guided games.',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
