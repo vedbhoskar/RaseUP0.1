@@ -89,6 +89,10 @@ button:disabled { cursor: not-allowed; }
 .game-module-row span { display: inline-flex; align-items: center; gap: 5px; padding: 7px 9px; border: 1px solid #dce4dc; border-radius: 10px; color: #42564b; font-size: .72rem; font-weight: 750; }
 .student-game-action, .mission-next, .result-home { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; margin-top: auto; border-radius: 14px; padding: 0 18px; border: 0; background: #ff775f; color: #2e1711; box-shadow: 0 7px 0 #d65340; font-weight: 800; text-decoration: none; }
 .student-game-action:hover, .mission-next:hover, .result-home:hover { background: #ff8a75; }
+.why-quest-card .game-card-art { background: radial-gradient(circle at 28% 20%, rgb(201 245 107 / 25%), transparent 13rem), linear-gradient(145deg, #24385d, #422d61); }
+.why-quest-card .nova-orb { background: #b8c1f5; }
+.why-quest-card .nova-orb::after { border-top-color: #b8c1f5; }
+.why-quest-card .game-card-art > strong { color: rgb(255 255 255 / 26%); }
 
 /* Mission start */
 .mission-preview-page { min-height: 100vh; display: grid; place-items: center; padding: 24px; background: radial-gradient(circle at 75% 15%, rgb(201 245 107 / 35%), transparent 24rem), #eef3ed; }
@@ -150,6 +154,14 @@ button:disabled { cursor: not-allowed; }
 .mission-mood-grid button:hover { transform: translateY(-2px); border-color: var(--mood); }.mission-mood-grid button.selected { border-color: #173f33; background: var(--mood); box-shadow: 0 6px 0 rgb(23 63 51 / 12%); }
 .mission-mood-grid button > span { display: grid; place-items: center; width: 39px; height: 39px; border-radius: 50%; background: #fff; font: 850 1.15rem/1 var(--font-heading); }.mission-mood-grid button > strong { font-size: .78rem; }.mission-mood-grid button > svg { position: absolute; right: 8px; top: 8px; width: 15px; }
 .stage-help, .voice-note, .talk-scaffold { margin: 12px 0 0; color: #65756c; font-size: .82rem; line-height: 1.5; }
+.why-builder-stack { display: grid; gap: 20px; }
+.why-reason-input { display: grid; gap: 8px; margin-top: 16px; }
+.why-reason-input > span { display: flex; align-items: center; gap: 7px; color: #30483b; font-size: .82rem; font-weight: 800; }
+.why-reason-input svg { width: 16px; }
+.why-reason-input textarea { min-height: 82px; resize: vertical; padding: 12px 14px; border: 1px solid #d8e0d8; border-radius: 14px; color: #263d31; font: inherit; }
+.why-reason-input textarea:focus { border-color: #337c65; outline: 3px solid rgb(51 124 101 / 12%); }
+.practice-sentence { margin: 16px 0 0; padding: 17px 18px; border-left: 5px solid #ff775f; border-radius: 0 16px 16px 0; background: #fff0ec; color: #4a281f; font: 680 1rem/1.5 var(--font-heading); }
+.why-speak-stage .sentence-ladder { max-height: 235px; overflow: auto; padding-right: 5px; }
 
 /* Sentence ladder */
 .sentence-ladder { display: grid; gap: 7px; margin-bottom: 24px; }

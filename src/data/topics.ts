@@ -1,5 +1,6 @@
 import type { GameDefinition, TopicDefinition, TopicId } from '@/src/domain/learning';
 import { NOVA_MOOD_MISSION } from './nova-mood-mission';
+import { NOVA_WHY_QUEST } from './nova-why-quest';
 
 export const TOPICS: readonly TopicDefinition[] = [{
   id: 'self-awareness',
@@ -8,7 +9,7 @@ export const TOPICS: readonly TopicDefinition[] = [{
   order: 1,
 }];
 
-export const GAMES: readonly GameDefinition[] = [NOVA_MOOD_MISSION];
+export const GAMES: readonly GameDefinition[] = [NOVA_MOOD_MISSION, NOVA_WHY_QUEST];
 
 export function listTopics() { return [...TOPICS].sort((a, b) => a.order - b.order); }
 export function listGamesByTopic(topicId: TopicId) { return GAMES.filter((game) => game.topicId === topicId); }
